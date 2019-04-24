@@ -190,6 +190,9 @@ impl Command {
                 // fail if we aren't root, so don't bother checking the
                 // return value, this is just done as an optimistic
                 // privilege dropping function.
+                // FIXME: relibc missing symbol
+                // NOTE: This one is actually dangerous
+                #[cfg(all(target_os = "linux", not(target_env = "relibc")))]
                 let _ = libc::setgroups(0, ptr::null());
 
                 cvt(libc::setuid(u as uid_t))?;

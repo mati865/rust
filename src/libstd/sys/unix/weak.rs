@@ -65,7 +65,8 @@ unsafe fn fetch(name: &str) -> usize {
     libc::dlsym(libc::RTLD_DEFAULT, name.as_ptr()) as usize
 }
 
-#[cfg(not(target_os = "linux"))]
+// FIXME: relibc missing symbol
+#[cfg(any(not(target_os = "linux"), all(target_os = "linux", target_env = "relibc")))]
 macro_rules! syscall {
     (fn $name:ident($($arg_name:ident: $t:ty),*) -> $ret:ty) => (
         unsafe fn $name($($arg_name: $t),*) -> $ret {
@@ -83,7 +84,8 @@ macro_rules! syscall {
     )
 }
 
-#[cfg(target_os = "linux")]
+// FIXME: relibc missing symbol
+#[cfg(all(target_os = "linux", not(target_env = "relibc")))]
 macro_rules! syscall {
     (fn $name:ident($($arg_name:ident: $t:ty),*) -> $ret:ty) => (
         unsafe fn $name($($arg_name:$t),*) -> $ret {

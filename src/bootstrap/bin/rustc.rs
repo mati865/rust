@@ -174,6 +174,12 @@ fn main() {
             cmd.arg("-L").arg(&root);
         }
 
+        // FIXME: do not hardcode
+        if target.contains("relibc") {
+            let root = OsString::from("/relibc/lib");
+            cmd.arg("-L").arg(&root);
+        }
+
         // Override linker if necessary.
         if let Ok(target_linker) = env::var("RUSTC_TARGET_LINKER") {
             cmd.arg(format!("-Clinker={}", target_linker));

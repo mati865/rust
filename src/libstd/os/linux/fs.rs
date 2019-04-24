@@ -326,10 +326,19 @@ pub trait MetadataExt {
 #[stable(feature = "metadata_ext", since = "1.1.0")]
 impl MetadataExt for Metadata {
     #[allow(deprecated)]
+    #[cfg(all(target_os = "linux", not(target_env = "relibc")))]
     fn as_raw_stat(&self) -> &raw::stat {
         unsafe {
             &*(self.as_inner().as_inner() as *const libc::stat64
                                           as *const raw::stat)
+        }
+    }
+    #[allow(deprecated)]
+    #[cfg(all(target_os = "linux", target_env = "relibc"))]
+    fn as_raw_stat(&self) -> &raw::stat {
+        unsafe {
+            &*(self.as_inner().as_inner() as *const libc::stat
+                as *const raw::stat)
         }
     }
     fn st_dev(&self) -> u64 {

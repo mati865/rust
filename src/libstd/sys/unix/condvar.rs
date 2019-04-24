@@ -27,18 +27,22 @@ impl Condvar {
         Condvar { inner: UnsafeCell::new(libc::PTHREAD_COND_INITIALIZER) }
     }
 
+    // FIXME: relibc missing symbol
     #[cfg(any(target_os = "macos",
               target_os = "ios",
               target_os = "l4re",
               target_os = "android",
-              target_os = "hermit"))]
+              target_os = "hermit",
+              all(target_os = "linux", target_env = "relibc")))]
     pub unsafe fn init(&mut self) {}
 
+    // FIXME: relibc missing symbol
     #[cfg(not(any(target_os = "macos",
                   target_os = "ios",
                   target_os = "l4re",
                   target_os = "android",
-                  target_os = "hermit")))]
+                  target_os = "hermit",
+                  all(target_os = "linux", target_env = "relibc"))))]
     pub unsafe fn init(&mut self) {
         use crate::mem::MaybeUninit;
         let mut attr = MaybeUninit::<libc::pthread_condattr_t>::uninit();

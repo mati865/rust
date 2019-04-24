@@ -136,6 +136,14 @@ fn copy_third_party_objects(builder: &Builder<'_>, compiler: &Compiler, target: 
                 &libdir.join(obj),
             );
         }
+    } else if target.contains("relibc") {
+        for &obj in &["crt0.o", "crti.o", "crtn.o"] {
+            // FIXME: do not hardcode
+            builder.copy(
+                Path::new(&format!("/relibc/lib/{}", obj)),
+                &libdir.join(obj),
+            );
+        }
     }
 
     // Copies libunwind.a compiled to be linked wit x86_64-fortanix-unknown-sgx.

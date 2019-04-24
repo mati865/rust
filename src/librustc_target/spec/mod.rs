@@ -54,6 +54,7 @@ mod haiku_base;
 mod hermit_base;
 mod linux_base;
 mod linux_musl_base;
+mod linux_relibc_base;
 mod openbsd_base;
 mod netbsd_base;
 mod solaris_base;
@@ -368,6 +369,8 @@ supported_targets! {
     ("i586-unknown-linux-musl", i586_unknown_linux_musl),
     ("mips-unknown-linux-musl", mips_unknown_linux_musl),
     ("mipsel-unknown-linux-musl", mipsel_unknown_linux_musl),
+
+    ("x86_64-unknown-linux-relibc", x86_64_unknown_linux_relibc),
 
     ("mips-unknown-linux-uclibc", mips_unknown_linux_uclibc),
     ("mipsel-unknown-linux-uclibc", mipsel_unknown_linux_uclibc),

@@ -1751,6 +1751,7 @@ impl<'test> TestCx<'test> {
                 || (self.config.target.contains("musl")
                     && !aux_props.force_host
                     && !self.config.host.contains("musl"))
+                || (self.config.target.contains("relibc") && !aux_props.force_host)
                 || self.config.target.contains("wasm32")
                 || self.config.target.contains("nvptx")
             {

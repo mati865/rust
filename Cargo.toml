@@ -69,5 +69,10 @@ rustc-workspace-hack = { path = 'src/tools/rustc-workspace-hack' }
 rustc-std-workspace-core = { path = 'src/tools/rustc-std-workspace-core' }
 rustc-std-workspace-alloc = { path = 'src/tools/rustc-std-workspace-alloc' }
 
+# RELIBC
+backtrace = { git = 'https://github.com/mati865/backtrace-rs.git', branch = 'relibc' }
+backtrace-sys = { git = 'https://github.com/mati865/backtrace-rs.git', branch = 'relibc' }
+libc = { git = 'https://github.com/mati865/libc.git', branch = 'relibc' }
+
 [patch."https://github.com/rust-lang/rust-clippy"]
 clippy_lints = { path = "src/tools/clippy/clippy_lints" }

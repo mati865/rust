@@ -86,7 +86,8 @@ impl Thread {
         debug_assert_eq!(ret, 0);
     }
 
-    #[cfg(any(target_os = "linux",
+    // FIXME: relibc missing symbol
+    #[cfg(any(all(target_os = "linux", not(target_env = "relibc")),
               target_os = "android"))]
     pub fn set_name(name: &CStr) {
         const PR_SET_NAME: libc::c_int = 15;
@@ -122,7 +123,9 @@ impl Thread {
                                      name.as_ptr() as *mut libc::c_void);
         }
     }
+    // FIXME: relibc missing symbol
     #[cfg(any(target_env = "newlib",
+              target_env = "relibc",
               target_os = "solaris",
               target_os = "haiku",
               target_os = "l4re",
@@ -185,7 +188,8 @@ impl Drop for Thread {
     }
 }
 
-#[cfg(all(not(all(target_os = "linux", not(target_env = "musl"))),
+// FIXME: relibc missing symbol
+#[cfg(all(not(all(target_os = "linux", not(any(target_env = "musl", target_env = "relibc")))),
           not(target_os = "freebsd"),
           not(target_os = "macos"),
           not(all(target_os = "netbsd", not(target_vendor = "rumprun"))),
@@ -199,8 +203,8 @@ pub mod guard {
     pub unsafe fn init() -> Option<Guard> { None }
 }
 
-
-#[cfg(any(all(target_os = "linux", not(target_env = "musl")),
+// FIXME: relibc missing symbol
+#[cfg(any(all(target_os = "linux", not(any(target_env = "musl", target_env = "relibc"))),
           target_os = "freebsd",
           target_os = "macos",
           all(target_os = "netbsd", not(target_vendor = "rumprun")),

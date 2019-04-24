@@ -20,17 +20,20 @@ mod imp {
     use crate::fs::File;
     use crate::io::Read;
 
-    #[cfg(any(target_os = "linux", target_os = "android"))]
+    // FIXME: relibc missing symbol
+    #[cfg(any(all(target_os = "linux", not(target_env = "relibc")), target_os = "android"))]
     fn getrandom(buf: &mut [u8]) -> libc::c_long {
         unsafe {
             libc::syscall(libc::SYS_getrandom, buf.as_mut_ptr(), buf.len(), libc::GRND_NONBLOCK)
         }
     }
 
-    #[cfg(not(any(target_os = "linux", target_os = "android")))]
+    // FIXME: relibc missing symbol
+    #[cfg(not(any(all(target_os = "linux", not(target_env = "relibc")), target_os = "android")))]
     fn getrandom_fill_bytes(_buf: &mut [u8]) -> bool { false }
 
-    #[cfg(any(target_os = "linux", target_os = "android"))]
+    // FIXME: relibc missing symbol
+    #[cfg(any(all(target_os = "linux", not(target_env = "relibc")), target_os = "android"))]
     fn getrandom_fill_bytes(v: &mut [u8]) -> bool {
         use crate::sync::atomic::{AtomicBool, Ordering};
         use crate::sys::os::errno;

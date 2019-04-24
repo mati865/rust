@@ -52,10 +52,12 @@ unsafe impl GlobalAlloc for System {
     }
 }
 
+// FIXME: relibc missing symbol
 #[cfg(any(target_os = "android",
           target_os = "hermit",
           target_os = "redox",
-          target_os = "solaris"))]
+          target_os = "solaris",
+          all(target_os = "linux", target_env = "relibc")))]
 #[inline]
 unsafe fn aligned_malloc(layout: &Layout) -> *mut u8 {
     // On android we currently target API level 9 which unfortunately
@@ -78,10 +80,12 @@ unsafe fn aligned_malloc(layout: &Layout) -> *mut u8 {
     libc::memalign(layout.align(), layout.size()) as *mut u8
 }
 
+// FIXME: relibc missing symbol
 #[cfg(not(any(target_os = "android",
               target_os = "hermit",
               target_os = "redox",
-              target_os = "solaris")))]
+              target_os = "solaris",
+              all(target_os = "linux", target_env = "relibc"))))]
 #[inline]
 unsafe fn aligned_malloc(layout: &Layout) -> *mut u8 {
     let mut out = ptr::null_mut();
