@@ -13,10 +13,8 @@ fn main() {
         #[cfg(all(not(bootstrap), feature = "llvm-libunwind"))]
         llvm_libunwind::compile();
     } else if target.contains("linux") {
-        if target.contains("musl") {
-            // musl is handled in lib.rs
-        } else if target.contains("relibc") {
-            println!("cargo:rustc-link-lib=unwind");
+        if target.contains("musl") || target.contains("relibc") {
+            // musl and relibc are handled in lib.rs
         } else if !target.contains("android") {
             println!("cargo:rustc-link-lib=gcc_s");
         }

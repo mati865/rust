@@ -26,3 +26,8 @@ cfg_if::cfg_if! {
 #[link(name = "unwind", kind = "static", cfg(target_feature = "crt-static"))]
 #[link(name = "gcc_s", cfg(not(target_feature = "crt-static")))]
 extern {}
+
+#[cfg(target_env = "relibc")]
+#[link(name = "unwind", kind = "static", cfg(target_feature = "crt-static"))]
+#[link(name = "unwind", cfg(not(target_feature = "crt-static")))]
+extern {}
