@@ -25,7 +25,7 @@ mkdir -p /relibc
 #PREFIX=/relibc ./setup.sh all
 
 # Build with https://gitlab.redox-os.org/mati865/libc/tree/relibc
-curl -LO https://github.com/mati865/llvm-project/releases/download/llvmorg-8.0.0-relibc_v0/prebuilt.zip
+curl -LO https://github.com/mati865/llvm-project/releases/download/llvmorg-8.0.0-relibc_v1/prebuilt.zip
 unzip prebuilt.zip -d /relibc
 
 ln -s /relibc/bin/x86_64-unknown-linux-relibc-clang{,++} /usr/local/bin/
