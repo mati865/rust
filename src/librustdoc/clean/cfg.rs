@@ -383,6 +383,7 @@ impl<'a> fmt::Display for Html<'a> {
                         "msvc" => "MSVC",
                         "musl" => "musl",
                         "newlib" => "Newlib",
+                        "relibc" => "relibc",
                         "uclibc" => "uClibc",
                         "sgx" => "SGX",
                         _ => "",

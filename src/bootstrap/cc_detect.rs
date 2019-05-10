@@ -77,6 +77,9 @@ pub fn find(build: &mut Build) {
                 if target.contains("musl") {
                     cfg.static_flag(true);
                 }
+                if target.contains("relibc") {
+                    cfg.static_flag(true);
+                }
             }
         }
 
@@ -192,6 +195,14 @@ fn set_compiler(cfg: &mut cc::Build,
                 if guess.exists() {
                     cfg.compiler(guess);
                 }
+            }
+        }
+
+        t if t.contains("relibc") => {
+            let root = Path::new("/relibc");
+            let guess = root.join("bin/x86_64-unknown-linux-relibc-clang");
+            if guess.exists() {
+                cfg.compiler(guess);
             }
         }
 
