@@ -18,7 +18,7 @@ pub fn memchr(needle: u8, haystack: &[u8]) -> Option<usize> {
 pub fn memrchr(needle: u8, haystack: &[u8]) -> Option<usize> {
 
     // FIXME: relibc missing symbol
-    #[cfg(all(target_os = "linux", not(target_env = "relibc")))]
+    #[cfg(target_os = "linux")]
     fn memrchr_specific(needle: u8, haystack: &[u8]) -> Option<usize> {
         // GNU's memrchr() will - unlike memchr() - error if haystack is empty.
         if haystack.is_empty() {return None}
@@ -36,7 +36,7 @@ pub fn memrchr(needle: u8, haystack: &[u8]) -> Option<usize> {
     }
 
     // FIXME: relibc missing symbol
-    #[cfg(any(not(target_os = "linux"), target_env = "relibc"))]
+    #[cfg(not(target_os = "linux"))]
     fn memrchr_specific(needle: u8, haystack: &[u8]) -> Option<usize> {
         core::slice::memchr::memrchr(needle, haystack)
     }
