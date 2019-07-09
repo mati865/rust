@@ -15,7 +15,9 @@ steps:
 - bash: git config --global core.autocrlf false
   displayName: "Disable git automatic line ending conversion"
   
-- powershell: git config --list
+- powershell: |
+    git config --list
+    git config core.autocrlf
   displayName: show git config
 
 - checkout: self
