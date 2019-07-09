@@ -14,6 +14,9 @@ steps:
 # started shipping install scripts with CRLF endings instead of the old LF.
 - bash: git config --global core.autocrlf false
   displayName: "Disable git automatic line ending conversion"
+  
+- powershell: git config --list
+  displayName: show git config
 
 - checkout: self
   fetchDepth: 2
