@@ -46,5 +46,5 @@ ENV CC_x86_64_unknown_linux_relibc=x86_64-unknown-linux-relibc-clang \
 ENV CARGO_TARGET_X86_64_UNKNOWN_LINUX_RELIBC_LINKER=x86_64-unknown-linux-relibc-clang
 
 ENV SCRIPT \
-      python2.7 ../x.py test --target $TARGETS && \
+#      python2.7 ../x.py test --target $TARGETS && \
       python2.7 ../x.py dist --target $TARGETS

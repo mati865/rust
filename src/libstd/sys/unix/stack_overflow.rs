@@ -23,8 +23,7 @@ impl Drop for Handler {
     }
 }
 
-// FIXME: relibc missing symbol
-#[cfg(any(all(target_os = "linux", not(target_env = "relibc")),
+#[cfg(any(target_os = "linux",
           target_os = "macos",
           target_os = "dragonfly",
           target_os = "freebsd",
@@ -182,8 +181,7 @@ mod imp {
     }
 }
 
-// FIXME: relibc missing symbol
-#[cfg(not(any(all(target_os = "linux", not(target_env = "relibc")),
+#[cfg(not(any(target_os = "linux",
               target_os = "macos",
               target_os = "dragonfly",
               target_os = "freebsd",
