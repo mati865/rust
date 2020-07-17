@@ -214,7 +214,16 @@ fn main() {
             continue;
         }
 
-        let kind = if name.starts_with("LLVM") { llvm_kind } else { "dylib" };
+        let kind = if name.starts_with("LLVM") {
+            llvm_kind
+        } else if name == "z" {
+            // Link zlib statically to avoid additional runtime dependency (#74420)
+            // Static-nobundle allows to link system libraries without having to provide
+            // search paths and we don't need to bundle it anyway
+            "static-nobundle"
+        } else {
+            "dylib"
+        };
         println!("cargo:rustc-link-lib={}={}", kind, name);
     }
 
