@@ -144,7 +144,6 @@ fn get_linker(
     sess: &Session,
     linker: &Path,
     flavor: LinkerFlavor,
-    self_contained: bool,
 ) -> Command {
     let msvc_tool = windows_registry::find_tool(&sess.opts.target_triple.triple(), "link.exe");
 
@@ -204,7 +203,7 @@ fn get_linker(
 
     // The compiler's sysroot often has some bundled tools, so add it to the
     // PATH for the child.
-    let mut new_path = sess.host_filesearch(PathKind::All).get_tools_search_paths(self_contained);
+    let mut new_path = sess.host_filesearch(PathKind::All).get_tools_search_paths();
     let mut msvc_changed_path = false;
     if sess.target.target.options.is_like_msvc {
         if let Some(ref tool) = msvc_tool {
@@ -471,7 +470,7 @@ fn link_natively<'a, B: ArchiveBuilder<'a>>(
     target_cpu: &str,
 ) {
     info!("preparing {:?} to {:?}", crate_type, out_filename);
-    let (linker_path, flavor) = linker_and_flavor(sess);
+    let (linker_path, flavor) = linker_and_flavor(sess, crate_type);
     let mut cmd = linker_with_args::<B>(
         &linker_path,
         flavor,
@@ -845,7 +844,7 @@ pub fn ignored_for_lto(sess: &Session, info: &CrateInfo, cnum: CrateNum) -> bool
         && (info.compiler_builtins == Some(cnum) || info.is_no_builtins.contains(&cnum))
 }
 
-fn linker_and_flavor(sess: &Session) -> (PathBuf, LinkerFlavor) {
+fn linker_and_flavor(sess: &Session, crate_type: CrateType) -> (PathBuf, LinkerFlavor) {
     fn infer_from(
         sess: &Session,
         linker: Option<PathBuf>,
@@ -918,6 +917,14 @@ fn linker_and_flavor(sess: &Session) -> (PathBuf, LinkerFlavor) {
     if let Some(ret) = infer_from(sess, sess.opts.cg.linker.clone(), sess.opts.cg.linker_flavor) {
         return ret;
     }
+
+    // FIXME: Find better way to detect MinGW?
+    if sess.host.target_os == "windows"
+        && sess.host.target_env == "gnu"
+        && crt_objects_fallback(sess, crate_type)
+    {
+        return (PathBuf::from("rust-lld"), LinkerFlavor::Lld(LldFlavor::Ld));
+    };
 
     if let Some(ret) = infer_from(
         sess,
@@ -1029,7 +1036,7 @@ fn get_crt_libs_path(sess: &Session) -> Option<PathBuf> {
     }
 
     fn probe(sess: &Session) -> Option<PathBuf> {
-        if let (linker, LinkerFlavor::Gcc) = linker_and_flavor(&sess) {
+        if let (linker, LinkerFlavor::Gcc) = linker_and_flavor(&sess, CrateType::Executable) {
             let linker_path = if cfg!(windows) && linker.extension().is_none() {
                 linker.with_extension("exe")
             } else {
@@ -1576,7 +1583,7 @@ fn linker_with_args<'a, B: ArchiveBuilder<'a>>(
     target_cpu: &str,
 ) -> Command {
     let crt_objects_fallback = crt_objects_fallback(sess, crate_type);
-    let base_cmd = get_linker(sess, path, flavor, crt_objects_fallback);
+    let base_cmd = get_linker(sess, path, flavor);
     // FIXME: Move `/LIBPATH` addition for uwp targets from the linker construction
     // to the linker args construction.
     assert!(base_cmd.get_args().is_empty() || sess.target.target.target_vendor == "uwp");
