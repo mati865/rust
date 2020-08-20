@@ -9,6 +9,8 @@ src/etc/installer/gfx/* binary
 *.woff binary
 src/vendor/** -text
 Cargo.lock linguist-generated=false
+*.diff.32bit diff
+*.diff.64bit diff
 
 # Older git versions try to fix line endings on images, this prevents it.
 *.png binary
