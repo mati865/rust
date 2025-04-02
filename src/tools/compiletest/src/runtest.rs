@@ -1063,7 +1063,6 @@ impl<'test> TestCx<'test> {
         if delete_after_success && proc_res.status.success() {
             // delete the executable after running it to save space.
             // it is ok if the deletion failed.
-            let _ = fs::remove_file(self.make_exe_name());
         }
 
         proc_res
