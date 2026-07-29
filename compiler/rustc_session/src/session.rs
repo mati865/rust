@@ -1612,10 +1612,20 @@ fn validate_commandline_args_with_session_available(sess: &Session) {
         }
     }
 
-    if sess.opts.unstable_opts.instrument_mcount == InstrumentMcount::Fentry
-        && !sess.target.options.supports_fentry
-    {
-        sess.dcx().emit_err(diagnostics::InstrumentationNotSupported { us: "fentry".to_string() });
+    match sess.opts.unstable_opts.instrument_mcount {
+        InstrumentMcount::Fentry(opts) => {
+            if !sess.target.options.supports_fentry {
+                sess.dcx().emit_err(diagnostics::InstrumentationNotSupported {
+                    us: "fentry".to_string(),
+                });
+            }
+            if (opts.no_call || opts.record) && sess.target.arch != Arch::S390x {
+                sess.dcx().emit_err(diagnostics::InstrumentationNotSupported {
+                    us: "fentry-*".to_string(),
+                });
+            }
+        }
+        _ => {}
     }
 
     if sess.opts.unstable_opts.instrument_xray.is_some() && !sess.target.options.supports_xray {
