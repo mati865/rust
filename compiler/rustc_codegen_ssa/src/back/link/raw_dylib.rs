@@ -73,7 +73,7 @@ pub(super) fn create_raw_dylib_dll_import_libs<'a>(
             let name_suffix = if is_direct_dependency { "_imports" } else { "_imports_indirect" };
             let output_path = tmpdir.join(format!("{raw_dylib_name}{name_suffix}.lib"));
 
-            let using_dlltool = common::is_using_dlltool(&sess.target);
+            let using_dlltool = common::is_using_dlltool(&sess.target, sess);
 
             let items: Vec<ImportLibraryItem> = raw_dylib_imports
                 .iter()

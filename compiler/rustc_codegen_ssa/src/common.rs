@@ -200,8 +200,11 @@ pub fn asm_const_ptr_clean<'tcx>(tcx: TyCtxt<'tcx>, scalar: Scalar) -> Scalar {
     }
 }
 
-pub fn is_using_dlltool(target: &Target) -> bool {
-    target.os == Os::Windows && target.env == Env::Gnu && target.cfg_abi == CfgAbi::Unspecified
+pub fn is_using_dlltool(target: &Target, sess: &rustc_session::Session) -> bool {
+    target.os == Os::Windows
+        && target.env == Env::Gnu
+        && target.cfg_abi == CfgAbi::Unspecified
+        && sess.opts.cg.dlltool.is_some()
 }
 
 pub fn i686_decorated_name(
