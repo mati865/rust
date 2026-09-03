@@ -206,7 +206,6 @@ pub fn is_using_dlltool(target: &Target) -> bool {
 
 pub fn i686_decorated_name(
     dll_import: &DllImport,
-    mingw: bool,
     disable_name_mangling: bool,
     force_fully_decorated: bool,
 ) -> String {
@@ -232,13 +231,10 @@ pub fn i686_decorated_name(
     let prefix = if add_prefix && dll_import.symbol_type == DllImportSymbolType::Function {
         match dll_import.calling_convention {
             DllCallingConvention::C | DllCallingConvention::Vectorcall(_) => None,
-            DllCallingConvention::Stdcall(_) => (!mingw
-                || dll_import.import_name_type == Some(PeImportNameType::Decorated))
-            .then_some('_'),
+            DllCallingConvention::Stdcall(_) => Some('_'),
             DllCallingConvention::Fastcall(_) => Some('@'),
         }
-    } else if dll_import.symbol_type != DllImportSymbolType::Function && !mingw {
-        // For static variables, prefix with '_' on MSVC.
+    } else if dll_import.symbol_type != DllImportSymbolType::Function {
         Some('_')
     } else {
         None

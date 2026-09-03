@@ -44,9 +44,8 @@ pub(crate) fn get_fn<'ll, 'tcx>(cx: &CodegenCx<'ll, 'tcx>, instance: Instance<'t
             // (as would have been in the declaring object file), but dlltool
             // wants the name as exported (as would be in the def file)
             // which may be missing decorations.
-            let using_dlltool = common::is_using_dlltool(&tcx.sess.target);
             let llfn = cx.declare_fn(
-                &common::i686_decorated_name(dllimport, using_dlltool, true, !using_dlltool),
+                &common::i686_decorated_name(dllimport, true, true),
                 fn_abi,
                 Some(instance),
             );
