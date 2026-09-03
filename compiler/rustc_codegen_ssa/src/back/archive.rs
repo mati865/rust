@@ -199,12 +199,7 @@ fn create_mingw_dll_import_lib(
         "EXPORTS\n{}",
         items
             .into_iter()
-            .map(|ImportLibraryItem { name, ordinal, symbol_name, .. }| {
-                match ordinal {
-                    Some(n) => format!("{name} @{n} NONAME"),
-                    None => symbol_name.unwrap_or(name),
-                }
-            })
+            .map(|ImportLibraryItem { name, symbol_name, .. }| { symbol_name.unwrap_or(name) })
             .collect::<Vec<String>>()
             .join("\n")
     );
